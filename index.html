@@ -1,0 +1,1534 @@
+<html lang="en" class="bg-[#020204] scroll-smooth">
+
+<head></head>
+
+<body class="bg-[#020204] text-slate-300 antialiased overflow-x-hidden selection:bg-purple-500/30 selection:text-white">
+
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  <style>
+    /* 3D Transform utilities */
+    .transform-style-preserve-3d {
+      transform-style: preserve-3d !important;
+    }
+
+    .backface-hidden {
+      backface-visibility: hidden;
+    }
+  </style>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpiNex Web Solutions</title>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <link rel="stylesheet" href="./dist/output.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      /* cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAeFBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8L8ZMhAAAAKHRSTlMAAQMGBw8SFy8xNjw+Q0hUVV9mZXd6f4WNj5efp6y8wsbKzNDR09bY2tzg4uXm5+zv8fP2nhW8DAAAAF5JREFUGNNVz2cSg1AQQNEGhA0XBIUxJSRRQn///7ihQRLrE+0nZ77gRgzHMecfA6miju8Jk1kAlAGmFQwRRlBPWXYgjJxAIlzvTDrS4eAIez9MBYS8eUPVcy8UdFZoxkEvAvulqRvZrqbb/J5o0BI/85p8BtARpyntOZbDZSlGm4QNpVvH6PU8y1iYz8v9f0GOzGcY3z+TY08Qh0LN1rF3C8G4AAAAASUVORK5CYII="), auto; */
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Modern Neon Cursor */
+    .cursor-glow {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, transparent 70%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      transition: opacity 0.2s ease-out;
+    }
+
+    /* 3D Cards */
+    .premium-card {
+      transform-style: preserve-3d;
+      transition: transform 0.25s ease-out;
+    }
+
+    /* Grid Background */
+    .bg-grid-pattern {
+      background-size: 50px 50px;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    }
+
+    #cta-parallax {
+      transform: translateY(0px);
+      transition: transform 0.1s linear;
+    }
+
+    /* Hide scrollbar */
+    ::-webkit-scrollbar {
+      width: 0px;
+      background: transparent;
+    }
+
+    .card-grid {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    /* Unique Scanline Animation for Team */
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(200%);
+      }
+    }
+
+    .group:hover .scan-effect {
+      animation: scanline 2s linear infinite;
+    }
+
+    /* Console Scanline */
+    @keyframes horizontal-scan {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(200%);
+      }
+    }
+
+    .console-scan {
+      animation: horizontal-scan 2s linear infinite;
+    }
+
+    /* Industry Card Hover Effect */
+    .industry-card:hover {
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+    }
+
+    /* Service Spotlight Effect */
+    .service-spotlight-card {
+      background-color: rgba(255, 255, 255, 0.02);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-spotlight-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
+          rgba(168, 85, 247, 0.15),
+          transparent 40%);
+      opacity: 0;
+      transition: opacity 0.5s;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .service-spotlight-card:hover::before {
+      opacity: 1;
+    }
+
+    .service-spotlight-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y),
+          rgba(255, 255, 255, 0.1),
+          transparent 40%);
+      opacity: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .service-spotlight-card:hover::after {
+      opacity: 1;
+    }
+  </style>
+
+
+  <!-- Custom Cursor -->
+  <div class="custom-cursor"></div>
+
+  <nav id="site-navbar" class="fixed top-4 left-1/2 -translate-x-1/2 w-[90%] md:w-[80%] 
+     max-w-[1400px] z-50 bg-[#020204]/60 backdrop-blur-xl border border-white/10 
+     rounded-2xl transition-all duration-300">
+
+    <div class="px-4 md:px-6 h-16 flex items-center justify-between">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-2 logo-reveal opacity-0">
+
+        <!-- PNG Logo (bigger) -->
+        <div class="relative w-10 h-10 flex items-center justify-center">
+          <div class="absolute inset-0 bg-purple-600 blur-lg opacity-40"></div>
+
+          <img src="./img/logo-Photoroom.png" alt="SpiNex Logo" class="relative w-full h-full object-contain">
+        </div>
+
+        <!-- Company Name (UNCHANGED) -->
+        <span class="text-white font-medium tracking-tight text-lg">
+          SpiNex
+        </span>
+
+      </div>
+
+      <!-- Desktop Nav Links -->
+      <div class="hidden lg:flex items-center gap-8 text-xs font-medium text-slate-400 nav-links opacity-0">
+        <a href="#hero" class="hover:text-white transition-colors">Home</a>
+        <a href="#about" class="hover:text-white transition-colors">About</a>
+        <a href="#services" class="hover:text-white transition-colors">Services</a>
+        <a href="#portfolio" class="hover:text-white transition-colors">Portfolio</a>
+        <a href="#industries" class="hover:text-white transition-colors">Industries</a>
+        <a href="#team" class="hover:text-white transition-colors">Team</a>
+        <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+        <a href="https://www.instagram.com/spinex.websolutions" target="_blank" class="group transition-all">
+
+          <i data-lucide="instagram" class="w-4 h-4 stroke-current text-slate-400
+            pointer-events-auto
+            group-hover:text-pink-400
+            group-hover:drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]
+            transition-all duration-300">
+          </i>
+
+        </a>
+
+
+      </div>
+
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileBtn" class="lg:hidden text-white">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+
+    </div>
+  </nav>
+
+  <div id="mobileMenu"
+    class="hidden lg:hidden fixed top-20 left-0 w-full bg-[#020204] border-t border-white/10 py-6 px-6 space-y-4 z-40">
+    <a href="#hero" class="block text-slate-300 hover:text-white">Home</a>
+    <a href="#about" class="block text-slate-300 hover:text-white">About</a>
+    <a href="#services" class="block text-slate-300 hover:text-white">Services</a>
+    <a href="#portfolio" class="block text-slate-300 hover:text-white">Portfolio</a>
+    <a href="#industries" class="block text-slate-300 hover:text-white">Industries</a>
+    <a href="#team" class="block text-slate-300 hover:text-white">Team</a>
+    <a href="#contact" class="block text-slate-300 hover:text-white">Contact</a>
+  </div>
+
+  <!-- Advanced Hero Section -->
+  <section id="hero" class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <!-- Dynamic Background Elements -->
+    <div class="absolute inset-0 bg-grid-pattern z-0 pointer-events-none opacity-40"></div>
+    <div
+      class="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none animate-pulse">
+    </div>
+    <div
+      class="absolute bottom-0 right-0 w-[40rem] h-[40rem] bg-indigo-600/5 rounded-full blur-[100px] pointer-events-none">
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10 w-full">
+
+      <!-- Hero Content -->
+      <div class="max-w-2xl pt-10 lg:pt-0">
+        <div
+          class="hero-badge inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-purple-300 mb-8 opacity-0">
+          <span class="font-mono text-[10px] text-slate-400">AGENCY //</span>
+          <span>SpiNex Web Solutions</span>
+        </div>
+
+        <h1
+          class="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter leading-[0.95] text-white mb-8 hero-title opacity-0">
+          Your Brand <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-300 to-white">
+            Upgraded
+          </span><br>
+          Digitally.
+        </h1>
+
+        <p class="text-lg text-slate-400 max-w-md leading-relaxed mb-10 hero-text opacity-0">
+          We create high-converting WordPress websites, e-commerce stores, social media systems
+          and premium video content to help brands grow faster.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4 hero-btns opacity-0">
+          <button
+            class="group relative px-6 py-3.5 bg-white text-black rounded-full text-sm font-semibold overflow-hidden hover:scale-105 transition-transform duration-300">
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-slate-200 to-white opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
+            <span class="relative flex items-center gap-2">
+              Start Your Project <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </span>
+          </button>
+
+          <button
+            class="px-6 py-3.5 text-slate-300 hover:text-white text-sm font-medium border-b border-transparent hover:border-white/20 transition-all">
+            View Portfolio
+          </button>
+        </div>
+      </div>
+
+      <!-- 3D Hero Visual -->
+      <div class="hidden lg:block perspective-container h-[600px] relative">
+        <div class="hero-visual w-full h-full relative" id="hero-visual">
+
+          <!-- Card 1 (Back) -->
+          <div
+            class="absolute top-1/4 left-1/4 w-80 h-96 glass rounded-2xl border border-white/10 z-0 p-6 opacity-40 scale-90"
+            id="card-1">
+            <div class="flex gap-2 mb-6">
+              <div class="w-3 h-3 rounded-full bg-white/20"></div>
+              <div class="w-3 h-3 rounded-full bg-white/20"></div>
+            </div>
+            <div class="space-y-3">
+              <div class="h-2 w-full bg-white/5 rounded-full"></div>
+              <div class="h-2 w-2/3 bg-white/5 rounded-full"></div>
+            </div>
+          </div>
+
+          <!-- Card 2 (SEO Stats) -->
+          <div
+            class="absolute top-20 right-20 w-80 h-80 glass bg-gradient-to-br from-purple-900/20 to-black rounded-2xl border border-white/10 z-10 p-6 backdrop-blur-md"
+            id="card-2">
+            <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4 text-purple-300">
+              <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+            </div>
+            <div class="text-3xl font-medium text-white mb-1">+250%</div>
+            <div class="text-xs text-slate-400 mb-6">Brand Visibility</div>
+            <div class="h-32 flex items-end justify-between gap-1">
+              <div class="w-full bg-purple-500/20 rounded-t-sm h-[30%]"></div>
+              <div class="w-full bg-purple-500/30 rounded-t-sm h-[50%]"></div>
+              <div class="w-full bg-purple-500/50 rounded-t-sm h-[40%]"></div>
+              <div class="w-full bg-purple-500/80 rounded-t-sm h-[70%]"></div>
+              <div class="w-full bg-purple-500 rounded-t-sm h-[90%]"></div>
+            </div>
+          </div>
+
+          <!-- Card 3 (Code Visual) -->
+          <div
+            class="absolute bottom-20 left-10 w-96 h-64 bg-[#0A0A0A] rounded-2xl border border-white/10 z-20 p-6 shadow-2xl shadow-purple-900/20"
+            id="card-3">
+            <div class="flex items-center justify-between border-b border-white/5 pb-4 mb-4">
+              <span class="text-xs text-slate-500 font-mono">spinex-config.php</span>
+              <div class="flex gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-red-500/50"></div>
+                <div class="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                <div class="w-2 h-2 rounded-full bg-green-500/50"></div>
+              </div>
+            </div>
+            <div class="font-mono text-xs space-y-2">
+              <div class="text-pink-400">define('WEBSITE_SPEED', 'optimized');</div>
+              <div class="text-pink-400">define('STORE_READY', true);</div>
+              <div class="text-slate-500">// Designed for Growth</div>
+              <div class="text-green-400">$brand_boost = 100;</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div
+      class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 scroll-indicator">
+      <span class="text-[10px] uppercase tracking-widest text-slate-500">Scroll</span>
+      <div class="w-[1px] h-12 bg-gradient-to-b from-slate-500 to-transparent"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section id="about" class="py-32 px-6 bg-[#020204] relative overflow-hidden">
+    <!-- Subtle Background Gradient -->
+    <div
+      class="absolute top-1/2 left-0 w-[60rem] h-[60rem] bg-purple-900/5 rounded-full blur-[150px] -translate-y-1/2 pointer-events-none">
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+
+      <!-- Section Header -->
+      <div class="mb-16 md:mb-24">
+        <span class="text-purple-400 font-mono text-xs uppercase tracking-widest mb-4 block about-reveal opacity-0">01.
+          Who We Are</span>
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <h2
+            class="text-4xl md:text-6xl lg:text-7xl font-medium text-white tracking-tighter leading-[0.9] max-w-3xl about-reveal opacity-0">
+            Architects of <br>
+            <span class="text-slate-500">Digital Reality.</span>
+          </h2>
+          <p class="text-slate-400 max-w-sm text-sm leading-relaxed about-reveal opacity-0">
+            We don't just build websites; we engineer digital ecosystems. From the first line of code to the final
+            pixel,
+            we focus on performance, scalability, and impact.
+          </p>
+        </div>
+      </div>
+
+      <!-- Bento Grid Layout -->
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 h-auto lg:h-[550px]">
+
+        <!-- Item 1: The Main Narrative (Large) -->
+        <div
+          class="col-span-1 md:col-span-2 lg:col-span-2 row-span-2 bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-10 flex flex-col justify-between group hover:border-purple-500/20 transition-all duration-500 about-reveal opacity-0">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6 text-purple-400">
+              <i data-lucide="infinity" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-2xl font-medium text-white mb-4">The SpiNex Philosophy</h3>
+            <p class="text-slate-400 leading-relaxed text-sm md:text-base">
+              We believe in the perfect balance between logic and creativity. A website shouldn't just look good—it
+              should be a high-performance engine for your business. We strip away the unnecessary and focus on what
+              drives results: speed, user experience, and conversion.
+            </p>
+            <br>
+            <p class="text-slate-400 leading-relaxed text-sm md:text-base hidden md:block">
+              Whether you are a startup needing a launchpad or an enterprise scaling up, our team adapts to your vision
+              with precision engineering.
+            </p>
+          </div>
+
+          <!-- Bottom Statistics -->
+          <div class="grid grid-cols-3 gap-4 pt-8 border-t border-white/5 mt-8">
+            <div>
+              <div class="text-2xl md:text-3xl font-medium text-white">100<span class="text-purple-500">+</span></div>
+              <div class="text-xs text-slate-500 font-medium uppercase tracking-wider mt-1">Projects</div>
+            </div>
+            <div>
+              <div class="text-2xl md:text-3xl font-medium text-white">98<span class="text-purple-500">%</span></div>
+              <div class="text-xs text-slate-500 font-medium uppercase tracking-wider mt-1">Satisfaction</div>
+            </div>
+            <div>
+              <div class="text-2xl md:text-3xl font-medium text-white">24<span class="text-purple-500">/7</span></div>
+              <div class="text-xs text-slate-500 font-medium uppercase tracking-wider mt-1">Support</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 2: Code/Technical (Tall) -->
+        <div
+          class="col-span-1 md:col-span-1 lg:col-span-1 row-span-2 bg-[#0A0A0A] border border-white/10 rounded-3xl overflow-hidden relative group hover:border-purple-500/20 transition-all duration-500 about-reveal opacity-0">
+          <div class="absolute inset-0 bg-grid-pattern opacity-30"></div>
+          <div
+            class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 blur-[50px] group-hover:bg-purple-500/20 transition-all">
+          </div>
+
+          <div class="p-8 h-full flex flex-col">
+            <h3 class="text-lg font-medium text-white mb-2">Clean Code</h3>
+            <p class="text-xs text-slate-500 mb-6">Built on modern stacks.</p>
+
+            <div
+              class="mt-auto relative w-full bg-[#050505] rounded-xl border border-white/5 p-4 font-mono text-[10px] leading-5 text-slate-400 shadow-2xl">
+              <div class="flex gap-1.5 mb-3 border-b border-white/5 pb-2">
+                <div class="w-2 h-2 rounded-full bg-slate-700"></div>
+                <div class="w-2 h-2 rounded-full bg-slate-700"></div>
+              </div>
+              <span class="text-purple-400">const</span> <span class="text-blue-400">growBrand</span> = <span
+                class="text-yellow-400">async</span> () =&gt; {<br>
+              &nbsp;&nbsp;<span class="text-purple-400">await</span> optimize(<span
+                class="text-green-400">'SEO'</span>);<br>
+              &nbsp;&nbsp;<span class="text-purple-400">await</span> scale(<span
+                class="text-green-400">'Sales'</span>);<br>
+              &nbsp;&nbsp;<span class="text-purple-400">return</span> <span class="text-green-400">'Success'</span>;<br>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3: Design/Visual (Small) -->
+        <div
+          class="col-span-1 md:col-span-1 lg:col-span-1 bg-gradient-to-br from-purple-900/10 to-transparent border border-white/10 rounded-3xl p-6 flex flex-col justify-center items-start group hover:border-purple-500/20 transition-all duration-500 about-reveal opacity-0">
+          <div
+            class="w-10 h-10 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center mb-4 text-purple-300">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-lg font-medium text-white">Modern UI/UX</h3>
+          <p class="text-xs text-slate-500 mt-2">Pixel-perfect aesthetics.</p>
+        </div>
+
+        <!-- Item 4: Performance/Stats (Small) -->
+        <div
+          class="col-span-1 md:col-span-1 lg:col-span-1 bg-white/[0.02] border border-white/10 rounded-3xl p-6 relative overflow-hidden group hover:border-purple-500/20 transition-all duration-500 about-reveal opacity-0">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-white">Speed</h3>
+            <i data-lucide="zap" class="w-5 h-5 text-yellow-400 fill-yellow-400/20"></i>
+          </div>
+          <div class="space-y-3">
+            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full w-[95%] bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+            </div>
+            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full w-[88%] bg-purple-500 rounded-full"></div>
+            </div>
+            <p class="text-right text-[10px] text-green-400 font-mono pt-1">99/100 Performance</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- REDESIGNED SERVICES SECTION: SPOTLIGHT GRID -->
+  <section id="services" class="py-32 px-6 bg-[#020204] relative overflow-hidden"
+    onmousemove="handleServiceMouseMove(event)">
+    <!-- Background Decor -->
+    <div
+      class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(50,10,80,0.15),transparent_70%)] pointer-events-none">
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+
+      <div class="text-center mb-20">
+        <span
+          class="text-purple-400 font-mono text-xs uppercase tracking-widest mb-4 block service-reveal opacity-0">02.
+          Services</span>
+        <h2 class="text-4xl md:text-6xl font-medium text-white tracking-tighter service-reveal opacity-0">
+          Digital <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-white">Capabilities</span>
+        </h2>
+        <p class="text-slate-400 mt-6 max-w-2xl mx-auto service-reveal opacity-0">
+          Comprehensive solutions designed to elevate your brand's digital presence. Move your cursor over the cards to
+          explore.
+        </p>
+      </div>
+
+      <!-- Spotlight Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="service-grid">
+
+        <!-- Card 1: Web Development -->
+        <div
+          class="group service-spotlight-card rounded-3xl border border-white/10 p-8 flex flex-col h-full transition-transform duration-300 hover:scale-[1.01] service-item opacity-0">
+          <div
+            class="w-14 h-14 rounded-2xl bg-[#0F0F11] border border-white/10 flex items-center justify-center mb-8 group-hover:border-purple-500/40 group-hover:bg-purple-500/10 transition-colors z-10 relative">
+            <i data-lucide="layout" class="w-7 h-7 text-slate-300 group-hover:text-purple-400 transition-colors"></i>
+          </div>
+
+          <h3 class="text-2xl font-medium text-white mb-3 z-10 relative">Web Development</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-8 z-10 relative flex-grow">
+            Custom-coded websites and WordPress solutions that are fast, secure, and SEO-optimized. We build digital
+            foundations that last.
+          </p>
+
+          <div class="flex flex-wrap gap-2 z-10 relative mt-auto">
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Custom
+              Code</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">WordPress</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">React</span>
+          </div>
+        </div>
+
+        <!-- Card 2: E-Commerce -->
+        <div
+          class="group service-spotlight-card rounded-3xl border border-white/10 p-8 flex flex-col h-full transition-transform duration-300 hover:scale-[1.01] service-item opacity-0">
+          <div
+            class="w-14 h-14 rounded-2xl bg-[#0F0F11] border border-white/10 flex items-center justify-center mb-8 group-hover:border-purple-500/40 group-hover:bg-purple-500/10 transition-colors z-10 relative">
+            <i data-lucide="shopping-cart"
+              class="w-7 h-7 text-slate-300 group-hover:text-purple-400 transition-colors"></i>
+          </div>
+
+          <h3 class="text-2xl font-medium text-white mb-3 z-10 relative">E-Commerce</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-8 z-10 relative flex-grow">
+            Scalable online stores built on WooCommerce or Shopify. We optimize for conversion, smooth checkout
+            experiences, and inventory management.
+          </p>
+
+          <div class="flex flex-wrap gap-2 z-10 relative mt-auto">
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Shopify</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">WooCommerce</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Payment
+              Gateways</span>
+          </div>
+        </div>
+
+        <!-- Card 3: SEO -->
+        <div
+          class="group service-spotlight-card rounded-3xl border border-white/10 p-8 flex flex-col h-full transition-transform duration-300 hover:scale-[1.01] service-item opacity-0">
+          <div
+            class="w-14 h-14 rounded-2xl bg-[#0F0F11] border border-white/10 flex items-center justify-center mb-8 group-hover:border-purple-500/40 group-hover:bg-purple-500/10 transition-colors z-10 relative">
+            <i data-lucide="bar-chart-2"
+              class="w-7 h-7 text-slate-300 group-hover:text-purple-400 transition-colors"></i>
+          </div>
+
+          <h3 class="text-2xl font-medium text-white mb-3 z-10 relative">Digital Marketing</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-8 z-10 relative flex-grow">
+            Result-driven digital marketing strategies to grow your brand online. We focus on reach, engagement, and
+            conversions across all major platforms.
+          </p>
+
+          <div class="flex flex-wrap gap-2 z-10 relative mt-auto">
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Social
+              Media Ads</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Google
+              Ads</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Lead
+              Generation</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Social Media -->
+        <div
+          class="group service-spotlight-card rounded-3xl border border-white/10 p-8 flex flex-col h-full transition-transform duration-300 hover:scale-[1.01] service-item opacity-0">
+          <div
+            class="w-14 h-14 rounded-2xl bg-[#0F0F11] border border-white/10 flex items-center justify-center mb-8 group-hover:border-purple-500/40 group-hover:bg-purple-500/10 transition-colors z-10 relative">
+            <i data-lucide="share-2" class="w-7 h-7 text-slate-300 group-hover:text-purple-400 transition-colors"></i>
+          </div>
+
+          <h3 class="text-2xl font-medium text-white mb-3 z-10 relative">Social Media</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-8 z-10 relative flex-grow">
+            Full-service management for Instagram, LinkedIn, and Facebook. We handle content calendars, engagement, and
+            community growth.
+          </p>
+
+          <div class="flex flex-wrap gap-2 z-10 relative mt-auto">
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Strategy</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Content</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Ads</span>
+          </div>
+        </div>
+
+        <!-- Card 5: Video Editing -->
+        <div
+          class="group service-spotlight-card rounded-3xl border border-white/10 p-8 flex flex-col h-full transition-transform duration-300 hover:scale-[1.01] service-item opacity-0">
+          <div
+            class="w-14 h-14 rounded-2xl bg-[#0F0F11] border border-white/10 flex items-center justify-center mb-8 group-hover:border-purple-500/40 group-hover:bg-purple-500/10 transition-colors z-10 relative">
+            <i data-lucide="film" class="w-7 h-7 text-slate-300 group-hover:text-purple-400 transition-colors"></i>
+          </div>
+
+          <h3 class="text-2xl font-medium text-white mb-3 z-10 relative">Video Editing</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-8 z-10 relative flex-grow">
+            Cinematic editing for Reels, YouTube, and ads. We add motion graphics, color grading, and sound design to
+            keep viewers hooked.
+          </p>
+
+          <div class="flex flex-wrap gap-2 z-10 relative mt-auto">
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Reels/Shorts</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Motion
+              Gfx</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Color
+              Grading</span>
+          </div>
+        </div>
+
+        <!-- Card 6: Brand Identity -->
+        <div
+          class="group service-spotlight-card rounded-3xl border border-white/10 p-8 flex flex-col h-full transition-transform duration-300 hover:scale-[1.01] service-item opacity-0">
+          <div
+            class="w-14 h-14 rounded-2xl bg-[#0F0F11] border border-white/10 flex items-center justify-center mb-8 group-hover:border-purple-500/40 group-hover:bg-purple-500/10 transition-colors z-10 relative">
+            <i data-lucide="pen-tool" class="w-7 h-7 text-slate-300 group-hover:text-purple-400 transition-colors"></i>
+          </div>
+
+          <h3 class="text-2xl font-medium text-white mb-3 z-10 relative">Graphic Designing</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-8 z-10 relative flex-grow">
+            Creative and impactful designs that define your brand visually. From marketing creatives to digital assets,
+            we design with purpose.
+          </p>
+
+          <div class="flex flex-wrap gap-2 z-10 relative mt-auto">
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Logo
+              Design</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Social
+              Media Creatives</span>
+            <span
+              class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-slate-400 font-medium border border-white/5">Brand
+              Graphics</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PORTFOLIO SECTION: MOSAIC GALLERY -->
+  <section id="portfolio" class="py-32 px-6 bg-[#020204] relative overflow-hidden">
+    <!-- Ambient Light -->
+    <div
+      class="absolute top-0 right-0 w-[50rem] h-[50rem] bg-purple-900/10 rounded-full blur-[160px] opacity-30 pointer-events-none">
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+
+      <!-- Heading -->
+      <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+        <div>
+          <span
+            class="text-purple-400 font-mono text-xs uppercase tracking-widest mb-4 block portfolio-reveal opacity-0">03.
+            Selected Work</span>
+          <h2 class="text-4xl md:text-6xl font-medium text-white tracking-tighter portfolio-reveal opacity-0">
+            Crafting Digital <br><span class="text-slate-500">Masterpieces.</span>
+          </h2>
+        </div>
+        <p class="text-slate-400 max-w-sm text-sm leading-relaxed text-right md:text-left portfolio-reveal opacity-0">
+          We don't just build sites; we build experiences. Explore our curated selection of high-impact projects.
+        </p>
+      </div>
+
+      <!-- Asymmetrical Mosaic Grid -->
+      <div id="portfolioGrid"
+  class="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6 auto-rows-[300px]">
+    </div>
+  </section>
+
+  <!-- REDESIGNED INDUSTRIES: HOLOGRAPHIC DATA GRID -->
+  <!-- Unique "Majedaar" concept: A responsive grid that feels like a tech dashboard. -->
+  <section id="industries" class="py-32 px-6 bg-[#020204] relative overflow-hidden">
+
+    <div class="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+
+      <!-- Heading -->
+      <div class="text-center mb-16">
+        <span
+          class="text-purple-400 font-mono text-xs uppercase tracking-widest mb-4 block industries-reveal opacity-0">04.
+          Industries</span>
+        <h2 class="text-4xl md:text-6xl font-medium text-white tracking-tight opacity-0 industries-reveal">
+          Who We <span class="text-slate-500">Serve</span>
+        </h2>
+      </div>
+
+      <!-- Responsive Holographic Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 industries-wrapper opacity-0 translate-y-8">
+
+        <!-- Card 1 -->
+        <div
+          class="group relative h-[320px] rounded-3xl bg-black border border-white/10 overflow-hidden industry-card transition-all duration-300">
+          <!-- Glitch Background on Hover -->
+          <div class="absolute inset-0 bg-cover bg-center opacity-30 grayscale 
+         group-hover:opacity-50 group-hover:grayscale-0 transition-all duration-500"
+            style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80');">
+          </div>
+
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+
+          <!-- Content -->
+          <div
+            class="absolute bottom-0 left-0 p-6 w-full z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+            <div
+              class="w-12 h-12 rounded-xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-center mb-4 text-purple-300 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+              <i data-lucide="map-pin" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-medium text-white mb-2">Local Business</h3>
+            <p
+              class="text-slate-400 text-xs leading-relaxed opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-20 transition-all duration-500">
+              Dominate your local market with SEO-optimized sites that turn searches into leads.
+            </p>
+          </div>
+
+          <!-- Tech Details (Visible on Desktop Hover) -->
+          <div
+            class="absolute top-4 right-4 text-[10px] font-mono text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity">
+            [LEAD_GEN_V2]
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div
+          class="group relative h-[320px] rounded-3xl bg-black border border-white/10 overflow-hidden industry-card transition-all duration-300">
+          <div class="absolute inset-0 bg-cover bg-center opacity-30 grayscale
+         group-hover:opacity-70 group-hover:grayscale-0 transition-all duration-500"
+            style="background-image: url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80');">
+          </div>
+
+
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+
+          <div
+            class="absolute bottom-0 left-0 p-6 w-full z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+            <div
+              class="w-12 h-12 rounded-xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-center mb-4 text-purple-300 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+              <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-medium text-white mb-2">E-Commerce</h3>
+            <p
+              class="text-slate-400 text-xs leading-relaxed opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-20 transition-all duration-500">
+              Robust WooCommerce stores with smooth checkouts and inventory automation.
+            </p>
+          </div>
+          <div
+            class="absolute top-4 right-4 text-[10px] font-mono text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity">
+            [STORE_API_OK]
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div
+          class="group relative h-[320px] rounded-3xl bg-black border border-white/10 overflow-hidden industry-card transition-all duration-300">
+          <div class="absolute inset-0 bg-cover bg-center opacity-30 grayscale
+         group-hover:opacity-50 group-hover:grayscale-0 transition-all duration-500"
+            style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80');">
+          </div>
+
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+
+          <div
+            class="absolute bottom-0 left-0 p-6 w-full z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+            <div
+              class="w-12 h-12 rounded-xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-center mb-4 text-purple-300 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+              <i data-lucide="mic-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-medium text-white mb-2">Creators</h3>
+            <p
+              class="text-slate-400 text-xs leading-relaxed opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-20 transition-all duration-500">
+              Stunning portfolios and landing pages for influencers, coaches, and artists.
+            </p>
+          </div>
+          <div
+            class="absolute top-4 right-4 text-[10px] font-mono text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity">
+            [VIRAL_MODE]
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div
+          class="group relative h-[320px] rounded-3xl bg-black border border-white/10 overflow-hidden industry-card transition-all duration-300">
+          <div class="absolute inset-0 bg-cover bg-center opacity-30 grayscale
+         group-hover:opacity-50 group-hover:grayscale-0 transition-all duration-500"
+            style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80');">
+          </div>
+
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+
+          <div
+            class="absolute bottom-0 left-0 p-6 w-full z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+            <div
+              class="w-12 h-12 rounded-xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-center mb-4 text-purple-300 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+              <i data-lucide="rocket" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-medium text-white mb-2">Startups</h3>
+            <p
+              class="text-slate-400 text-xs leading-relaxed opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-20 transition-all duration-500">
+              Scalable MVP launches and corporate sites that impress investors from day one.
+            </p>
+          </div>
+          <div
+            class="absolute top-4 right-4 text-[10px] font-mono text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity">
+            [SCALE_UP_X]
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- REDESIGNED TEAM: DIGITAL ID CARDS -->
+  <section id="team" class="py-32 px-6 bg-[#020204] relative overflow-hidden">
+    <!-- Background Glow -->
+    <div class="absolute inset-0">
+      <div class="absolute left-1/4 top-0 w-[38rem] h-[38rem] bg-purple-900/10 rounded-full blur-[150px] opacity-40">
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+      <div class="text-center mb-20">
+        <h2 class="text-4xl md:text-6xl font-medium text-white tracking-tight opacity-0 team-title">
+          Meet The <span class="text-slate-500">Squad</span>
+        </h2>
+        <p class="text-slate-400 max-w-2xl mx-auto mt-6 text-lg opacity-0 team-subtitle">
+          Digital artisans crafting your success.
+        </p>
+      </div>
+
+      <!-- Unique "Access Card" Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <!-- Member 1: Palak Pareek -->
+        <div
+          class="group relative bg-[#0A0A0A] rounded-[2rem] p-1 border border-white/10 hover:border-purple-500/50 transition-all duration-500 team-card opacity-0 hover:scale-[1.02]">
+          <!-- Scan line effect -->
+          <div class="absolute inset-0 rounded-[2rem] overflow-hidden pointer-events-none z-0">
+            <div
+              class="w-full h-[5px] bg-purple-500/30 blur-sm absolute top-0 left-0 scan-effect opacity-0 group-hover:opacity-100">
+            </div>
+          </div>
+
+          <div
+            class="bg-[#050505] rounded-[1.8rem] h-full p-8 flex flex-col items-center relative z-10 overflow-hidden">
+            <div class="absolute top-4 right-4 flex gap-1">
+              <div class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></div>
+              <div class="w-1.5 h-1.5 rounded-full bg-slate-700"></div>
+            </div>
+
+            <!-- Avatar with holographic border -->
+            <div
+              class="w-32 h-32 rounded-full p-1 bg-gradient-to-br from-purple-600 to-transparent mb-6 group-hover:rotate-12 transition-transform duration-500">
+              <div
+                class="w-full h-full rounded-full bg-[#111] flex items-center justify-center overflow-hidden relative">
+                <i data-lucide="user" class="w-12 h-12 text-slate-400"></i>
+                <!-- Image Overlay placeholder -->
+                <div class="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                </div>
+              </div>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-1">Palak Pareek</h3>
+            <div
+              class="px-3 py-1 bg-purple-900/20 border border-purple-500/20 rounded-full text-[10px] text-purple-300 font-mono tracking-widest mb-4">
+              FOUNDER // DEV
+            </div>
+            <p class="text-slate-500 text-sm text-center mb-6">Mastermind behind the code. Full-stack architect &amp;
+              creative director.</p>
+
+            <!-- Hidden Socials that slide up -->
+            <div
+              class="flex gap-4 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+              <a href="#" class="text-slate-400 hover:text-white"><i data-lucide="github" class="w-5 h-5"></i></a>
+              <a href="#" class="text-slate-400 hover:text-white"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+              <a href="#" class="text-slate-400 hover:text-white"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Member 2: Supriya -->
+        <div
+          class="group relative bg-[#0A0A0A] rounded-[2rem] p-1 border border-white/10 hover:border-purple-500/50 transition-all duration-500 team-card opacity-0 hover:scale-[1.02]">
+          <div class="absolute inset-0 rounded-[2rem] overflow-hidden pointer-events-none z-0">
+            <div
+              class="w-full h-[5px] bg-purple-500/30 blur-sm absolute top-0 left-0 scan-effect opacity-0 group-hover:opacity-100">
+            </div>
+          </div>
+
+          <div
+            class="bg-[#050505] rounded-[1.8rem] h-full p-8 flex flex-col items-center relative z-10 overflow-hidden">
+            <div class="absolute top-4 right-4 flex gap-1">
+              <div class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></div>
+              <div class="w-1.5 h-1.5 rounded-full bg-slate-700"></div>
+            </div>
+
+            <div
+              class="w-32 h-32 rounded-full p-1 bg-gradient-to-br from-purple-600 to-transparent mb-6 group-hover:rotate-12 transition-transform duration-500">
+              <div
+                class="w-full h-full rounded-full bg-[#111] flex items-center justify-center overflow-hidden relative">
+                <i data-lucide="shopping-bag" class="w-12 h-12 text-slate-400"></i>
+              </div>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-1">Supriya Banetiya</h3>
+            <div
+              class="px-3 py-1 bg-purple-900/20 border border-purple-500/20 rounded-full text-[10px] text-purple-300 font-mono tracking-widest mb-4">
+              ECOMMERCE // OPS
+            </div>
+            <p class="text-slate-500 text-sm text-center mb-6">Expert in scaling stores. Logistics, strategy, and
+              conversion optimization.</p>
+
+            <div
+              class="flex gap-4 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+              <a href="#" class="text-slate-400 hover:text-white"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+              <a href="#" class="text-slate-400 hover:text-white"><i data-lucide="mail" class="w-5 h-5"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Member 3: Shiva -->
+        <div
+          class="group relative bg-[#0A0A0A] rounded-[2rem] p-1 border border-white/10 hover:border-purple-500/50 transition-all duration-500 team-card opacity-0 hover:scale-[1.02]">
+          <div class="absolute inset-0 rounded-[2rem] overflow-hidden pointer-events-none z-0">
+            <div
+              class="w-full h-[5px] bg-purple-500/30 blur-sm absolute top-0 left-0 scan-effect opacity-0 group-hover:opacity-100">
+            </div>
+          </div>
+
+          <div
+            class="bg-[#050505] rounded-[1.8rem] h-full p-8 flex flex-col items-center relative z-10 overflow-hidden">
+            <div class="absolute top-4 right-4 flex gap-1">
+              <div class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></div>
+              <div class="w-1.5 h-1.5 rounded-full bg-slate-700"></div>
+            </div>
+
+            <div
+              class="w-32 h-32 rounded-full p-1 bg-gradient-to-br from-purple-600 to-transparent mb-6 group-hover:rotate-12 transition-transform duration-500">
+              <div
+                class="w-full h-full rounded-full bg-[#111] flex items-center justify-center overflow-hidden relative">
+                <i data-lucide="film" class="w-12 h-12 text-slate-400"></i>
+              </div>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-1">Shiva Pareek</h3>
+            <div
+              class="px-3 py-1 bg-purple-900/20 border border-purple-500/20 rounded-full text-[10px] text-purple-300 font-mono tracking-widest mb-4">
+              VIDEO // FX
+            </div>
+            <p class="text-slate-500 text-sm text-center mb-6">Visual storyteller. High-end editing, VFX, and content
+              pacing.</p>
+
+            <div
+              class="flex gap-4 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+              <a href="#" class="text-slate-400 hover:text-white"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+              <a href="#" class="text-slate-400 hover:text-white"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Large CTA -->
+  <section id="cta" class="relative py-32 px-6 overflow-hidden">
+    <div id="cta-parallax" class="absolute inset-0 h-[200%] bg-cover bg-center will-change-transform"
+      style="background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&amp;q=80&amp;auto=format&amp;fit=crop');">
+    </div>
+    <div class="absolute inset-0 bg-black/85"></div>
+
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      <h2 class="text-5xl md:text-7xl font-medium text-white tracking-tighter mb-8 cta-title translate-y-10 opacity-0">
+        Ready to <span class="text-white">Scale Your Business?</span>
+      </h2>
+      <p class="text-lg text-slate-300 mb-10 cta-text translate-y-10 opacity-0">
+        From websites to e-commerce, social media and content creation — we help brands grow digitally.
+      </p>
+      <div class="cta-btn translate-y-10 opacity-0">
+        <button class="px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-slate-200 transition-colors">
+          Start Your Project
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REDESIGNED CONTACT: TERMINAL INTERFACE -->
+  <section id="contact" class="py-32 px-6 bg-[#020204] relative overflow-hidden">
+    <!-- Background Glow -->
+    <div class="absolute inset-0">
+      <div class="absolute left-1/3 bottom-0 w-[40rem] h-[40rem] bg-purple-900/10 rounded-full blur-[150px] opacity-40">
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto relative z-10">
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+        <!-- Contact Info -->
+        <div class="opacity-0 contact-info self-center">
+          <span class="text-purple-400 font-mono text-xs uppercase tracking-widest mb-4 block">05. Contact</span>
+          <h2 class="text-4xl md:text-6xl font-medium text-white tracking-tight mb-8">
+            Let's <span class="text-slate-500">Initialize</span><br>Project.
+          </h2>
+          <p class="text-slate-400 mb-10 leading-relaxed max-w-md">
+            We are ready to execute your vision. Send us a signal and we'll establish a secure connection.
+          </p>
+
+          <div class="space-y-6">
+            <div class="flex items-center gap-4 group cursor-pointer">
+              <div
+                class="w-12 h-12 rounded-2xl bg-[#0F0F11] border border-white/10 flex items-center justify-center group-hover:border-purple-500/50 transition-colors">
+                <i data-lucide="mail" class="w-5 h-5 text-purple-400"></i>
+              </div>
+              <div>
+                <p class="text-slate-500 text-xs font-mono mb-1">SMTP_SERVER</p>
+                <p class="text-white text-sm font-medium">info.spinexwebsolutions@gmail.com</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4 group cursor-pointer">
+              <div
+                class="w-12 h-12 rounded-2xl bg-[#0F0F11] border border-white/10 flex items-center justify-center group-hover:border-purple-500/50 transition-colors">
+                <i data-lucide="map-pin" class="w-5 h-5 text-purple-400"></i>
+              </div>
+              <div>
+                <p class="text-slate-500 text-xs font-mono mb-1">COORDINATES</p>
+                <p class="text-white text-sm font-medium">Jaipur, Rajasthan, IN</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terminal Form -->
+        <div class="w-full opacity-0 contact-form">
+          <div class="rounded-xl bg-[#0A0A0A] border border-white/10 overflow-hidden shadow-2xl">
+            <!-- Window Bar -->
+            <div class="h-10 bg-[#111] border-b border-white/5 flex items-center px-4 justify-between">
+              <div class="flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+              </div>
+              <div class="text-[10px] font-mono text-slate-500">contact.sh</div>
+              <div class="w-10"></div>
+            </div>
+
+            <!-- Code Editor Form -->
+            <div class="p-6 md:p-8 font-mono text-sm">
+              <form id="contactForm" class="space-y-4">
+                <div class="flex flex-col md:flex-row gap-2 md:items-center text-slate-400">
+                  <span class="text-purple-500 whitespace-nowrap">const</span> <span class="text-blue-400">sender</span>
+                  = <span class="text-white">"</span>
+                  <input type="text" name="name" placeholder="Your Name" required=""
+                    class="bg-transparent border-b border-white/10 focus:border-purple-500 outline-none text-white w-full placeholder:text-slate-700">
+                  <span class="text-white">";</span>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-2 md:items-center text-slate-400">
+                  <span class="text-purple-500 whitespace-nowrap">let</span> <span class="text-blue-400">email</span> =
+                  <span class="text-white">"</span>
+                  <input type="email" name="email" placeholder="email@address.com" required=""
+                    class="bg-transparent border-b border-white/10 focus:border-purple-500 outline-none text-white w-full placeholder:text-slate-700">
+                  <span class="text-white">";</span>
+                </div>
+
+                <div class="text-slate-400 mt-4">
+                  <span class="text-purple-500">function</span> <span class="text-yellow-400">sendMessage</span>() {
+                </div>
+
+                <div class="pl-4 md:pl-8 text-slate-400 relative">
+                  <span class="absolute left-0 top-3 text-slate-700 text-[10px]">1</span>
+                  <span class="text-green-400">// Type your message below</span>
+                  <textarea name="message" placeholder="Tell us about your project..." required=""
+                    class="w-full bg-black/30 mt-2 p-3 rounded border border-white/10 focus:border-purple-500 outline-none text-slate-300 h-32 resize-none"></textarea>
+                </div>
+
+                <div class="text-slate-400">}</div>
+
+                <button type="submit"
+                  class="mt-4 group relative inline-flex items-center gap-2 px-6 py-2 bg-purple-600/10 border border-purple-500/50 text-purple-400 rounded hover:bg-purple-600 hover:text-white transition-all duration-300">
+                  <span class="relative">Run Program</span>
+                  <i data-lucide="terminal" class="w-4 h-4"></i>
+                </button>
+              </form>
+
+              <!-- UNIQUE TERMINAL STATUS UI -->
+              <div id="consoleOutput"
+                class="hidden mt-6 p-4 rounded-lg bg-[#050505] border border-white/5 font-mono text-xs relative overflow-hidden group">
+                <!-- Scanline -->
+                <div
+                  class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-green-500 to-transparent console-scan opacity-50">
+                </div>
+
+                <div class="flex items-start gap-3 relative z-10">
+                  <!-- Blinking Indicator -->
+                  <div id="statusIndicator" class="mt-0.5 w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
+                  <div class="w-full">
+                    <div class="flex justify-between items-center border-b border-white/5 pb-1 mb-2">
+                      <div class="text-slate-500">&gt;&gt; execution_log.txt</div>
+                      <div class="text-slate-600 text-[10px]">pid: 8492</div>
+                    </div>
+                    <div id="statusMessage" class="text-white font-medium mb-1">System processing request...</div>
+                    <div id="statusDetails"
+                      class="text-slate-500 text-[10px] grid grid-cols-2 gap-2 mt-1 opacity-0 transition-opacity duration-500">
+                      <span>packet_loss: 0%</span>
+                      <span class="text-right">latency: <span id="latencyVal">12</span>ms</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+ <footer class="relative border-t border-white/5 pt-20 pb-10 px-6 bg-black text-sm overflow-hidden">
+
+  <!-- BIG BACKGROUND TEXT -->
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+    <h1 class="font-bold tracking-tighter text-purple-600/5 whitespace-nowrap" style="font-size: 15vw;">
+      SPINEX
+    </h1>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="relative max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 mb-20">
+
+    <!-- Branding -->
+    <div class="col-span-2 md:col-span-1 relative z-10">
+      <div class="flex items-center gap-1 mb-6">
+        <img
+          src="/img/logo-Photoroom.png"
+          alt="SpiNex Web Solutions Logo"
+          class="h-8 md:h-9 object-contain"
+        />
+        <span class="text-white font-medium tracking-tight">
+          SpiNex Web Solutions
+        </span>
+      </div>
+      <p class="text-slate-500 text-sm leading-relaxed">
+        We build modern websites, e-commerce systems, and engaging digital content to help brands grow faster.
+      </p>
+    </div>
+
+    <!-- Services -->
+    <div class="space-y-4 relative z-10">
+      <h4 class="text-white font-medium">Services</h4>
+      <a href="#services" class="block text-slate-500 hover:text-white transition-colors">Website Development</a>
+      <a href="#services" class="block text-slate-500 hover:text-white transition-colors">E-commerce Store Setup</a>
+      <a href="#services" class="block text-slate-500 hover:text-white transition-colors">Video Editing</a>
+      <a href="#services" class="block text-slate-500 hover:text-white transition-colors">Social Media Management</a>
+      <a href="#services" class="block text-slate-500 hover:text-white transition-colors">Digital Marketing</a>
+      <a href="#services" class="block text-slate-500 hover:text-white transition-colors">Graphic Designing</a>
+    </div>
+
+    <!-- Company -->
+    <div class="space-y-4 relative z-10">
+      <h4 class="text-white font-medium">Company</h4>
+      <a href="#about" class="block text-slate-500 hover:text-white transition-colors">About Us</a>
+      <a href="#services" class="block text-slate-500 hover:text-white transition-colors">Services</a>
+      <a href="#portfolio" class="block text-slate-500 hover:text-white transition-colors">Our Work</a>
+      <a href="#contact" class="block text-slate-500 hover:text-white transition-colors">Contact</a>
+      <a href="#team" class="block text-slate-500 hover:text-white transition-colors">Team</a>
+    </div>
+
+    <!-- Social -->
+    <div class="space-y-4 relative z-10">
+      <h4 class="text-white font-medium">Social</h4>
+      <a href="https://www.instagram.com/spinex.websolutions" target="_blank" class="block text-slate-500 hover:text-white transition-colors">Instagram</a>
+      <a href="#" target="_blank" class="block text-slate-500 hover:text-white transition-colors">LinkedIn</a>
+      <a href="#" target="_blank" class="block text-slate-500 hover:text-white transition-colors">Facebook</a>
+      <a href="#" target="_blank" class="block text-slate-500 hover:text-white transition-colors">YouTube</a>
+    </div>
+
+  </div>
+
+  <!-- Bottom -->
+  <div
+    class="relative max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 z-10">
+    <p class="text-slate-600">© 2026 SpiNex Web Solutions. All rights reserved.</p>
+    <p class="text-slate-600 font-mono text-xs">DESIGNED FOR GROWTH</p>
+  </div>
+
+</footer>
+
+
+  <script>
+    const glow = document.createElement("div");
+    glow.className = "cursor-glow";
+    document.body.appendChild(glow);
+
+    window.addEventListener("mousemove", (e) => {
+      glow.style.left = e.clientX + "px";
+      glow.style.top = e.clientY + "px";
+    });
+
+    // Handle spotlight effect for service cards
+    function handleServiceMouseMove(e) {
+      const cards = document.getElementsByClassName("service-spotlight-card");
+      for (const card of cards) {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty("--mouse-x", `${x}px`);
+        card.style.setProperty("--mouse-y", `${y}px`);
+      }
+    }
+
+    const mobileBtn = document.getElementById("mobileBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    mobileBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+
+    // Initialize Icons
+    lucide.createIcons();
+
+    // Register ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    // --- Hero Animation ---
+    const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    heroTl
+      .to('.logo-reveal', { opacity: 1, y: 0, duration: 0.8, delay: 0.2 })
+      .to('.nav-links', { opacity: 1, duration: 0.8 }, "-=0.6")
+      .to('.hero-badge', { opacity: 1, y: 0, duration: 0.6 }, "-=0.4")
+      .to('.hero-title', { opacity: 1, y: 0, duration: 1, ease: "power4.out" }, "-=0.4")
+      .to('.hero-text', { opacity: 1, y: 0, duration: 0.8 }, "-=0.6")
+      .to('.hero-btns', { opacity: 1, y: 0, duration: 0.8 }, "-=0.6")
+      .to('.scroll-indicator', { opacity: 1, duration: 1 }, "-=0.4");
+
+    // 3D Hero Cards Float
+    gsap.to('#card-1', { y: -15, rotation: 2, duration: 4, yoyo: true, repeat: -1, ease: "sine.inOut" });
+    gsap.to('#card-2', { y: 20, rotation: -2, duration: 5, yoyo: true, repeat: -1, ease: "sine.inOut", delay: 0.5 });
+    gsap.to('#card-3', { y: -10, duration: 3.5, yoyo: true, repeat: -1, ease: "sine.inOut", delay: 1 });
+
+    // Mouse Parallax for Hero
+    const heroSection = document.getElementById('hero');
+    const heroVisual = document.getElementById('hero-visual');
+    if (heroSection && heroVisual) {
+      heroSection.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+        gsap.to(heroVisual, { rotationY: -20 + x, rotationX: 20 - y, duration: 1, ease: "power2.out" });
+      });
+    }
+
+    // ABOUT ANIMATION
+    gsap.utils.toArray('.about-reveal').forEach((item, i) => {
+      gsap.fromTo(item,
+        { opacity: 0, y: 30 },
+        {
+          scrollTrigger: { trigger: item, start: "top 85%" },
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: i * 0.1,
+          ease: "power3.out"
+        }
+      );
+    });
+
+    // PORTFOLIO ANIMATION
+    gsap.utils.toArray('.portfolio-reveal').forEach((item, i) => {
+      gsap.to(item, {
+        scrollTrigger: { trigger: item, start: "top 85%" },
+        opacity: 1, y: 0, duration: 0.8, ease: "power3.out"
+      });
+    });
+
+
+
+
+    const projects = [
+   {
+    title: "Gayatri Packaging & Packers",
+    category: "Business Website",
+    description: "Lead generation website for a Jaipur-based packaging company.",
+    layout: "large",
+    icon: "layout",
+    link: "https://www.gayatripackagings.com/"   // 🔴 yaha real URL daal dena
+  },
+  {
+    title: "E-Commerce Store Setup",
+    category: "Shopify / WooCommerce",
+    description: "Complete store setup with payment gateway & product upload.",
+    layout: "vertical",
+    icon: "shopping-cart"
+  },
+  {
+  title: "Video Editing Portfolio",
+  category: "Reels • YouTube • Ads",
+  description: "Complete video editing portfolio including Instagram reels, YouTube videos, ads, and before-after edits. Click to explore full work.",
+  layout: "large",
+  icon: "film",
+  link: "https://drive.google.com/drive/folders/1nTOyQ3K8cUypZGkQBRYk8zPuUMIlxD01"
+}
+
+];
+
+const grid = document.getElementById("portfolioGrid");
+
+projects.forEach((project) => {
+
+  let colSpan = "md:col-span-2 lg:col-span-4";
+  let rowSpan = "row-span-1";
+
+  if (project.layout === "large") {
+    colSpan = "md:col-span-4 lg:col-span-8";
+  }
+
+  if (project.layout === "vertical") {
+    rowSpan = "row-span-2";
+  }
+
+  const card = document.createElement("a");
+
+  if (project.link) {
+  card.href = project.link;
+  card.target = "_blank";
+}
+
+  card.className = `
+    group relative col-span-1 ${colSpan} ${rowSpan}
+    rounded-3xl overflow-hidden border border-white/10
+    bg-[#0A0A0A] portfolio-card 
+  `;
+  
+
+  card.innerHTML = `
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-black"></div>
+
+    <div class="absolute inset-0 flex items-center justify-center opacity-40 group-hover:opacity-100 transition">
+      <i data-lucide="${project.icon}"
+         class="w-20 h-20 text-purple-400"></i>
+    </div>
+
+    <div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
+      <div class="text-purple-400 text-xs font-mono mb-2 uppercase tracking-widest">
+        ${project.category}
+      </div>
+      <h3 class="text-2xl font-medium text-white">
+        ${project.title}
+      </h3>
+      <p class="text-slate-400 text-sm mt-2 max-w-md">
+        ${project.description}
+      </p>
+    </div>
+  `;
+
+  grid.appendChild(card);
+});
+
+lucide.createIcons();
+
+
+    gsap.utils.toArray('.portfolio-card').forEach((card, i) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 50 },
+        {
+          scrollTrigger: { trigger: card, start: "top 90%" },
+          opacity: 1, y: 0, duration: 1, delay: i * 0.1, ease: "power4.out"
+        }
+      );
+    });
+
+    // INDUSTRIES ANIMATION (Updated for Grid)
+    gsap.to('.industries-reveal', {
+      scrollTrigger: { trigger: '#industries', start: "top 80%" },
+      opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power3.out"
+    });
+
+    gsap.to('.industries-wrapper', {
+      scrollTrigger: { trigger: '.industries-wrapper', start: "top 85%" },
+      opacity: 1, y: 0, duration: 1, ease: "power3.out"
+    });
+
+    // TEAM ANIMATION
+    gsap.to('.team-title', {
+      scrollTrigger: { trigger: '#team', start: "top 80%" },
+      opacity: 1, y: 0, duration: 0.9, ease: "power3.out"
+    });
+    gsap.to('.team-subtitle', {
+      scrollTrigger: { trigger: '#team', start: "top 78%" },
+      opacity: 1, y: 0, delay: 0.1, duration: 0.9, ease: "power3.out"
+    });
+    gsap.utils.toArray('.team-card').forEach((card, i) => {
+      gsap.to(card, {
+        scrollTrigger: { trigger: card, start: "top 85%" },
+        opacity: 1, scale: 1, duration: 0.9, delay: i * 0.12, ease: "back.out(1.7)"
+      });
+    });
+
+    // CONTACT ANIMATION
+    gsap.to('.contact-info', {
+      scrollTrigger: { trigger: '#contact', start: "top 75%" },
+      opacity: 1, x: 0, duration: 1, ease: "power3.out"
+    });
+    gsap.to('.contact-form', {
+      scrollTrigger: { trigger: '#contact', start: "top 75%" },
+      opacity: 1, y: 0, duration: 1, delay: 0.2, ease: "power3.out"
+    });
+
+    // FIXED PARALLAX EFFECT FOR CTA
+    gsap.to("#cta-parallax", {
+      scrollTrigger: {
+        trigger: "#cta",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1,
+      },
+      y: -500,
+      ease: "none"
+    });
+
+    // Service Section Animations
+    gsap.to(".service-reveal", {
+      scrollTrigger: { trigger: "#services", start: "top 80%" },
+      opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power3.out"
+    });
+
+    gsap.utils.toArray(".service-item").forEach((item, i) => {
+      gsap.to(item, {
+        scrollTrigger: { trigger: item, start: "top 90%" },
+        opacity: 1, scale: 1,
+        duration: 0.7, delay: i * 0.1, ease: "power3.out"
+      });
+    });
+
+    // CTA Reveal
+    gsap.to('.cta-title', { scrollTrigger: { trigger: '.cta-title', start: "top 80%" }, opacity: 1, y: 0, duration: 0.8 });
+    gsap.to('.cta-text', { scrollTrigger: { trigger: '.cta-text', start: "top 80%" }, opacity: 1, y: 0, duration: 0.8, delay: 0.1 });
+    gsap.to('.cta-btn', { scrollTrigger: { trigger: '.cta-btn', start: "top 80%" }, opacity: 1, y: 0, duration: 0.8, delay: 0.2 });
+
+
+    (function () {
+      emailjs.init("g0yyztbjet3qWwJZ3"); // YOUR PUBLIC KEY
+    })();
+
+    const form = document.getElementById("contactForm");
+    const statusBox = document.getElementById("consoleOutput");
+    const statusMsg = document.getElementById("statusMessage");
+    const statusInd = document.getElementById("statusIndicator");
+    const statusDetails = document.getElementById("statusDetails");
+    const latencyVal = document.getElementById("latencyVal");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Reset styles to processing state
+      statusBox.classList.remove("hidden");
+      statusBox.className = "mt-6 p-4 rounded-lg bg-[#050505] border border-yellow-500/30 font-mono text-xs relative overflow-hidden group";
+      statusInd.className = "mt-0.5 w-2 h-2 rounded-full bg-yellow-500 animate-pulse";
+      statusMsg.className = "text-yellow-400 font-medium mb-1";
+      statusMsg.innerHTML = "Initializing upload protocol...";
+      statusDetails.style.opacity = "0";
+
+      // Random latency simulation
+      latencyVal.innerText = Math.floor(Math.random() * 50) + 10;
+
+      emailjs.sendForm(
+        "service_w7nx5s3",   // 🔁 replace
+        "template_nq1m5qg",  // 🔁 replace
+        this
+      ).then(
+        () => {
+          // Success State - Green Terminal Style
+          statusBox.className = "mt-6 p-4 rounded-lg bg-[#050505] border border-green-500/30 font-mono text-xs relative overflow-hidden group";
+          statusInd.className = "mt-0.5 w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]";
+          statusMsg.className = "text-green-400 font-bold mb-1";
+          statusMsg.innerHTML = "Transmission Successful. Connection Closed.";
+          statusDetails.style.opacity = "1";
+          form.reset();
+        },
+        (error) => {
+          // Error State - Red Terminal Style
+          statusBox.className = "mt-6 p-4 rounded-lg bg-[#050505] border border-red-500/30 font-mono text-xs relative overflow-hidden group";
+          statusInd.className = "mt-0.5 w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]";
+          statusMsg.className = "text-red-400 font-bold mb-1";
+          statusMsg.innerHTML = "Error: Connection Refused. Check Network.";
+          console.error(error);
+        }
+      );
+    });
+  </script>
+</body>
+
+</html>
